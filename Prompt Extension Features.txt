@@ -1,0 +1,19 @@
+1.  Prompt Improvement Button
+    a. optimizes the prompt using current best practices of prompt engineering.
+
+2. Button for copying prompt
+
+3. Button for exporting prompt to Obsidian markdown file and a modal for selecting where the file is exported to.
+
+4. Organize prompts with customizeable tags and folders and make prompts and tags searchable.
+
+5. Tags should be utilized
+
+6. Add my prompt popup includes Title, button for folder to save to and a Content box for entering the actual prompt.
+
+7. Voice mode
+
+8. Interface should be a sidebar popup
+
+9. Import prompts
+    
