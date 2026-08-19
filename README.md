@@ -26,8 +26,9 @@ Plain HTML/CSS/JS (ES modules), no build step, no framework. Manifest V3 with th
 ## Using a live AI provider for Optimize Prompt
 
 1. Get an API key from the [Anthropic Console](https://console.anthropic.com/).
-2. In the extension, go to **Settings → Optimization Settings**, set **AI Provider** to "Anthropic (Claude)", optionally set a **Model** (defaults to `claude-haiku-4-5-20251001` if left blank), and paste your key into **API Key**.
-3. The key is stored in `chrome.storage.local` (plain text, like most browser extensions) and is only ever sent directly from your browser to Anthropic's API when you click Optimize — never logged to the console, never sent anywhere else. Anyone with access to this Chrome profile could read it via DevTools, so treat it like any other locally-stored secret.
+2. In the extension, go to **Settings → Optimization Settings**, set **AI Provider** to "Anthropic (Claude)", and paste your key into **API Key**.
+3. Click the ⟳ button next to **Model** to fetch the current list of Claude models from Anthropic's API, then click into the Model field to pick one from the dropdown (or leave it blank to use the default, `claude-haiku-4-5-20251001`, or type any model ID directly).
+4. The key is stored in `chrome.storage.local` (plain text, like most browser extensions) and is only ever sent directly from your browser to Anthropic's API when you click Optimize — never logged to the console, never sent anywhere else. Anyone with access to this Chrome profile could read it via DevTools, so treat it like any other locally-stored secret.
 
 ## Known limitations (by design, for this release)
 

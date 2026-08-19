@@ -22,6 +22,7 @@ let state = {
   optimizeDraft: { prompt: '', goal: 'general', instructions: '' },
   optimizeResult: null,
   optimizeLoading: false,
+  modelsLoading: false,
 };
 
 export function getState() {

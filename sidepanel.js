@@ -16,7 +16,7 @@ import { renderSettingsView } from './views/SettingsView.js';
 import { validatePrompt, validateCategoryName, normalizeTag } from './utils/validation.js';
 import { copyToClipboard } from './services/clipboard.js';
 import { insertIntoActiveTab } from './services/promptInsertion.js';
-import { optimizePrompt } from './services/optimizer.js';
+import { optimizePrompt, fetchAnthropicModels } from './services/optimizer.js';
 import { buildExport, downloadJson, defaultExportFilename, parseImportFile, buildImportPreview } from './services/importExport.js';
 import { debounce, qs } from './utils/dom.js';
 
@@ -416,6 +416,27 @@ document.getElementById('app').addEventListener('click', async (event) => {
       actions.closeModal();
       actions.showToast('Library reset to sample data');
       break;
+    case 'refresh-models': {
+      const apiKey = state.settings.optimization.apiKey;
+      if (!apiKey || !apiKey.trim()) {
+        actions.showToast('Add an API key first.', 'error');
+        break;
+      }
+      setState({ modelsLoading: true });
+      try {
+        const models = await fetchAnthropicModels(apiKey);
+        await actions.updateSettings({
+          optimization: { ...getState().settings.optimization, availableModels: models, modelsFetchedAt: new Date().toISOString() },
+        });
+        actions.showToast(`Model list updated (${models.length} models).`);
+      } catch (err) {
+        console.error('[Prompt Assistant] Refresh models failed:', err.message);
+        actions.showToast(err.message || 'Could not fetch model list.', 'error');
+      } finally {
+        setState({ modelsLoading: false });
+      }
+      break;
+    }
 
     default:
       break;

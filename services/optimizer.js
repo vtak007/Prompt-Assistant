@@ -121,3 +121,40 @@ export async function optimizePrompt({ prompt, goal = 'general', instructions = 
   const { text, model: usedModel } = await impl({ prompt, goal, instructions, model, apiKey });
   return { optimized: text, provider, goal, model: usedModel };
 }
+
+export async function fetchAnthropicModels(apiKey) {
+  if (!apiKey || !apiKey.trim()) {
+    throw new Error('API key is missing.');
+  }
+
+  let res;
+  try {
+    res = await fetch('https://api.anthropic.com/v1/models?limit=100', {
+      method: 'GET',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+    });
+  } catch (err) {
+    console.error('[Prompt Assistant] Anthropic models request failed:', err);
+    throw new Error('Network error — could not reach Anthropic. Check your connection.');
+  }
+
+  if (!res.ok) {
+    let detail = '';
+    try {
+      detail = (await res.json())?.error?.message || '';
+    } catch {
+      /* response wasn't JSON */
+    }
+    console.error('[Prompt Assistant] Anthropic models API error:', res.status, detail);
+    if (res.status === 401) throw new Error('API key was rejected. Check your key in Settings.');
+    if (res.status === 429) throw new Error('Rate limited by Anthropic. Try again shortly.');
+    throw new Error(`Anthropic request failed (${res.status}).`);
+  }
+
+  const data = await res.json();
+  return (data.data || []).map((m) => ({ id: m.id, displayName: m.display_name || m.id }));
+}

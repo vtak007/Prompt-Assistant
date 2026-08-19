@@ -97,6 +97,8 @@ export const defaultSettings = {
     model: '',
     apiEndpoint: '',
     apiKey: '',
+    availableModels: [],
+    modelsFetchedAt: null,
     defaultGoal: 'general',
   },
 };

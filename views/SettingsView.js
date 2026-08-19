@@ -1,7 +1,12 @@
 import { escapeHtml } from '../utils/dom.js';
+import { formatDate } from '../utils/dates.js';
 
 export function renderSettingsView(state) {
   const s = state.settings;
+  const availableModels = s.optimization.availableModels || [];
+  const modelOptions = availableModels
+    .map((m) => `<option value="${escapeHtml(m.id)}">${escapeHtml(m.displayName)}</option>`)
+    .join('');
   return `
     <h2 class="section-heading">Appearance</h2>
     <div class="field">
@@ -49,7 +54,20 @@ export function renderSettingsView(state) {
     </div>
     <div class="field">
       <label for="setting-model">Model</label>
-      <input type="text" id="setting-model" data-field="setting-optimization-model" value="${escapeHtml(s.optimization.model)}" placeholder="claude-haiku-4-5-20251001" autocomplete="off" />
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="setting-model" data-field="setting-optimization-model" list="model-suggestions" value="${escapeHtml(s.optimization.model)}" placeholder="claude-haiku-4-5-20251001" autocomplete="off" style="flex:1;" />
+        <button type="button" class="btn" data-action="refresh-models" ${state.modelsLoading ? 'disabled' : ''} title="Fetch the latest model list from Anthropic" aria-label="Refresh model list">
+          ${state.modelsLoading ? '…' : '⟳'}
+        </button>
+      </div>
+      <datalist id="model-suggestions">${modelOptions}</datalist>
+      <div class="hint">
+        ${
+          s.optimization.modelsFetchedAt
+            ? `Model list last updated ${formatDate(s.optimization.modelsFetchedAt)} (${availableModels.length} models). Click ⟳ to refresh.`
+            : 'Click ⟳ to fetch the latest model list from Anthropic (requires an API key below). You can also type a model ID directly.'
+        }
+      </div>
     </div>
     <div class="field">
       <label for="setting-api-key">API Key</label>
