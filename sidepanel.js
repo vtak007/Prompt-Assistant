@@ -79,6 +79,8 @@ function renderPreservingFocus(container, html) {
   }
 }
 
+let lastRenderedView = null;
+
 function render(state) {
   document.documentElement.dataset.theme = state.settings.appearance || 'dark';
   headerEl.innerHTML = renderHeader();
@@ -87,6 +89,11 @@ function render(state) {
   footerEl.innerHTML = renderFooter();
   modalEl.innerHTML = renderModal(state);
   toastEl.innerHTML = renderToast(state);
+
+  if (state.currentView !== lastRenderedView) {
+    lastRenderedView = state.currentView;
+    viewEl.scrollTop = 0;
+  }
 
   if (state.toast) {
     clearTimeout(toastTimer);
