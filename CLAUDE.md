@@ -1,11 +1,35 @@
-# Prompt Assistant — Project Instructions
+# CLAUDE.md
 
-A Chrome extension project (early stage) for assisting with prompts.
+Guidance for working in the Prompt Assistant Chrome extension repo. See the user's global `~/.claude/CLAUDE.md` for cross-project conventions (branching, doc-update gating, `.ini` handling, etc.) — not duplicated here.
 
 ## Key Files
 
-| File | Purpose |
+| File | Description |
 |---|---|
-| `Prompt Extension Features.txt` | Feature notes / spec for the extension |
-| `Screenshot 2026-07-14 120228.png` | Reference screenshot |
-| `MEMORY.md` | Persistent project memory (read at session start) |
+| `manifest.json` | MV3 manifest: permissions, side panel config, background service worker registration. |
+| `background/service-worker.js` | Sets side-panel-on-icon-click behavior; seeds storage on first install. |
+| `sidepanel.html` / `sidepanel.css` / `sidepanel.js` | The side panel shell, design tokens/theme, and the app's entry point (render loop + all event delegation). |
+| `store/store.js` | In-memory state container (`getState`/`setState`/`setStateSilent`/`subscribe`). |
+| `store/actions.js` | All state mutations + persistence calls live here; views never touch storage directly. |
+| `router/router.js` | Hash-based view router (`#/library`, `#/create`, `#/edit/:id`, etc.). |
+| `services/storage.js` | `chrome.storage.local` wrapper; owns the `{schemaVersion, categories, prompts, settings}` root shape and the migration stub. |
+| `services/promptInsertion.js` | Injects `insertTextIntoActiveElement` into the active tab via `chrome.scripting.executeScript` to insert prompt text into a focused field. |
+| `services/optimizer.js` | `optimizePrompt()` provider abstraction; currently backed by a deterministic mock provider only. |
+| `services/importExport.js` | JSON export builder + import validation/preview/duplicate-detection. |
+| `services/search.js` | Combined keyword/category/tag prompt filtering. |
+| `services/clipboard.js` | Copy-to-clipboard with a `document.execCommand` fallback. |
+| `views/*.js` | One render function per screen (Library, Create, Edit, Optimize, Import/Export, Search, Settings). Pure functions of state → HTML string. |
+| `components/*.js` | Shared render fragments (Header, Navigation, PromptCard, TagChip, Modal, Toast, Footer). |
+| `data/seed-data.js` | The 5 sample prompts + starter categories used on first install. |
+| `utils/*.js` | `ids.js` (uuid/slug), `dates.js`, `validation.js`, `dom.js` (escaping, delegation, debounce). |
+
+## Architecture notes
+
+- **No framework, no build step.** Every view/component is a plain function returning an HTML string; `sidepanel.js` re-renders the active view's container on every store change via `innerHTML`.
+- **Uncontrolled text fields.** Title/Content/Notes/Optimize textareas are *not* synced to the store on every keystroke (that would blow away cursor position on re-render). They're read from the DOM at the moment of an action (tag add/remove, submit, run-optimize). Only the Search keyword field re-renders live (debounced), using a focus-preservation helper in `sidepanel.js` (`renderPreservingFocus`) to keep the caret in place.
+- **`setStateSilent` vs `setState`**: `setState` triggers a full re-render of the view region; `setStateSilent` updates state without notifying subscribers — used for cheap per-keystroke flags like `formDirty`.
+- **Insertion permission model**: the manifest declares `host_permissions` for `http://*/*` and `https://*/*` (not just `activeTab`) because clicking a button *inside* the side panel does not count as one of the gesture types that grants `activeTab`'s temporary host access (only toolbar-icon clicks, keyboard commands, and context-menu items do). `chrome://` pages remain unreachable by design — Chrome blocks script injection there for every extension.
+
+## Deferred / future work
+
+Live AI provider wiring (OpenAI/Anthropic/Google/local endpoint), cloud sync, prompt variables/templates, version/usage history, multiple libraries, bulk edit, Markdown/CSV import, command palette, site-specific insertion adapters, and an undockable/floating panel window (like Bitwarden's pop-out) are all intentionally out of scope for this release — see `Prompt Assistant Features.md` §33 and the approved plan for details.

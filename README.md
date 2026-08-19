@@ -1,25 +1,30 @@
 # Prompt Assistant
 
-Planning-stage Chrome extension for organizing, improving, and reusing AI prompts.
-**No code yet** — this repo currently holds the feature spec and reference notes only.
+A Chrome extension for creating, organizing, searching, importing/exporting, and reusing AI prompts from a persistent side panel.
 
-## Planned features
+## Features
 
-From `Prompt Extension Features.txt`:
+- **Library** — browse prompts by category, tag, or favorites.
+- **Create / Edit** — save prompts with a title, category, tags, content, and optional notes.
+- **Search** — combined keyword + category + tag filtering, with a `/` quick-search shortcut.
+- **Optimize Prompt** — rewrite a prompt against a chosen goal (Clarity, Coding, Research, etc.) using a built-in mock optimizer. The `optimizePrompt()` abstraction in `services/optimizer.js` is designed so a real AI provider (OpenAI, Anthropic, Google, a local endpoint) can be plugged in later without touching the UI.
+- **Import / Export** — back up or transfer your library as JSON, with duplicate detection (Skip / Replace / Keep Both) on import.
+- **Insert into active tab** — insert a prompt's text into the focused text field on whatever page you're on (ChatGPT, Claude, Gemini, or any `<textarea>`/`<input>`/`contenteditable`), without auto-submitting.
+- **Settings** — appearance, default startup view, prompt click behavior, import/export preferences, and a "Reset to sample data" action.
 
-- **Prompt improvement** — one-click rewrite of a prompt using current prompt-engineering best
-  practices
-- **Copy prompt** — one-click copy to clipboard
-- **Export to Obsidian** — export a prompt to a markdown file, with a modal to pick the export
-  location
-- **Organization** — customizable tags and folders, with search across both
-- **Add prompt** — popup with Title, a folder picker, and a Content box
-- **Voice mode**
-- **Import prompts**
-- **Interface** — sidebar popup
+## Installing (unpacked)
 
-## Status
+1. Open `chrome://extensions`.
+2. Enable **Developer mode** (top-right toggle).
+3. Click **Load unpacked** and select this folder.
+4. Click the toolbar icon to open the side panel.
 
-Early planning only. See `Prompt Extension Features.txt` for the full feature list and
-`Screenshot 2026-07-14 120228.png` for an early interface reference. `MEMORY.md`/`CLAUDE.md`
-track project notes across sessions.
+## Tech
+
+Plain HTML/CSS/JS (ES modules), no build step, no framework. Manifest V3 with the Chrome Side Panel API. Data is stored in `chrome.storage.local`. See `CLAUDE.md` for the file map.
+
+## Known limitations (by design, for this release)
+
+- The Optimize Prompt feature uses a deterministic **mock** provider, not a live AI call — the Settings screen's provider/API key fields are present but disabled ("coming soon").
+- Insertion cannot reach cross-origin iframe composers or closed shadow-DOM editors, and never works on internal `chrome://` pages (Chrome blocks script injection there for all extensions).
+- No "undockable" floating window (like Bitwarden's pop-out) yet — deferred as a future enhancement.
