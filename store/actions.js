@@ -129,7 +129,7 @@ export async function removeTag(name) {
   const prompts = await storage.deleteTag(name);
   const filter = getState().libraryFilter;
   const patch = { prompts };
-  if (filter.type === 'tag' && filter.value === name) patch.libraryFilter = { type: 'all', value: null };
+  if (filter.type === 'tag' && filter.value === name) patch.libraryFilter = { type: 'none', value: null };
   setState(patch);
 }
 
@@ -154,11 +154,23 @@ export function setLibraryFilter(filter) {
 }
 
 export function toggleCategoriesExpanded() {
-  setState({ categoriesExpanded: !getState().categoriesExpanded });
+  const state = getState();
+  const expanded = !state.categoriesExpanded;
+  const patch = { categoriesExpanded: expanded };
+  if (!expanded && (state.libraryFilter.type === 'all' || state.libraryFilter.type === 'category')) {
+    patch.libraryFilter = { type: 'none', value: null };
+  }
+  setState(patch);
 }
 
 export function toggleTagsExpanded() {
-  setState({ tagsExpanded: !getState().tagsExpanded });
+  const state = getState();
+  const expanded = !state.tagsExpanded;
+  const patch = { tagsExpanded: expanded };
+  if (!expanded && state.libraryFilter.type === 'tag') {
+    patch.libraryFilter = { type: 'none', value: null };
+  }
+  setState(patch);
 }
 
 export function toggleFavoritesExpanded() {

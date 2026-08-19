@@ -8,9 +8,10 @@ function computeTagCounts(prompts) {
 }
 
 function filterPrompts(prompts, filter) {
-  if (filter.type === 'category') return prompts.filter((p) => p.categoryId === filter.value);
-  if (filter.type === 'tag') return prompts.filter((p) => (p.tags || []).includes(filter.value));
-  return prompts;
+  let result = prompts;
+  if (filter.type === 'category') result = prompts.filter((p) => p.categoryId === filter.value);
+  else if (filter.type === 'tag') result = prompts.filter((p) => (p.tags || []).includes(filter.value));
+  return [...result].sort((a, b) => a.title.localeCompare(b.title));
 }
 
 export function renderLibraryView(state) {
