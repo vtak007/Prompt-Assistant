@@ -49,11 +49,11 @@ export function renderSettingsView(state) {
     </div>
     <div class="field">
       <label for="setting-model">Model</label>
-      <input type="text" id="setting-model" data-field="setting-optimization-model" value="${escapeHtml(s.optimization.model)}" placeholder="claude-haiku-4-5-20251001" />
+      <input type="text" id="setting-model" data-field="setting-optimization-model" value="${escapeHtml(s.optimization.model)}" placeholder="claude-haiku-4-5-20251001" autocomplete="off" />
     </div>
     <div class="field">
       <label for="setting-api-key">API Key</label>
-      <input type="password" id="setting-api-key" data-field="setting-optimization-api-key" value="${escapeHtml(s.optimization.apiKey)}" />
+      <input type="password" id="setting-api-key" data-field="setting-optimization-api-key" value="${escapeHtml(s.optimization.apiKey)}" autocomplete="new-password" />
       <div class="hint">Stored locally in this browser only, and sent directly to Anthropic's API when you click Optimize.</div>
     </div>
 
