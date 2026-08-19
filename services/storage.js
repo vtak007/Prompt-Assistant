@@ -97,6 +97,26 @@ export async function deleteCategory(id, { reassignToId = null } = {}) {
   return root;
 }
 
+export async function renameTag(oldName, newName) {
+  const root = await getAll();
+  root.prompts = root.prompts.map((p) =>
+    (p.tags || []).includes(oldName)
+      ? { ...p, tags: [...new Set(p.tags.map((t) => (t === oldName ? newName : t)))] }
+      : p
+  );
+  await chrome.storage.local.set({ prompts: root.prompts });
+  return root.prompts;
+}
+
+export async function deleteTag(name) {
+  const root = await getAll();
+  root.prompts = root.prompts.map((p) =>
+    (p.tags || []).includes(name) ? { ...p, tags: p.tags.filter((t) => t !== name) } : p
+  );
+  await chrome.storage.local.set({ prompts: root.prompts });
+  return root.prompts;
+}
+
 export async function saveSettings(settings) {
   await chrome.storage.local.set({ settings });
   return settings;
@@ -118,6 +138,8 @@ export const storage = {
   saveCategory,
   updateCategory,
   deleteCategory,
+  renameTag,
+  deleteTag,
   getSettings,
   saveSettings,
   replaceAll,

@@ -19,3 +19,11 @@ export function validateCategoryName(name, existingCategories, excludeId = null)
   if (duplicate) return { valid: false, error: 'A category with this name already exists.' };
   return { valid: true, name: trimmed };
 }
+
+export function validateTagName(name, existingTags, excludeTag = null) {
+  const normalized = normalizeTag(name || '');
+  if (!normalized) return { valid: false, error: 'Tag name cannot be blank.' };
+  const duplicate = existingTags.some((t) => t !== excludeTag && t.toLowerCase() === normalized.toLowerCase());
+  if (duplicate) return { valid: false, error: 'A tag with this name already exists.' };
+  return { valid: true, name: normalized };
+}

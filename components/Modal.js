@@ -38,6 +38,34 @@ export function renderModal(state) {
     `);
   }
 
+  if (modal.type === 'edit-tag') {
+    return wrap(`
+      <h2 class="modal-title">Rename Tag</h2>
+      <form data-modal-form="edit-tag" data-tag="${escapeHtml(modal.tag)}">
+        <div class="field">
+          <label for="edit-tag-name">Tag name</label>
+          <input type="text" id="edit-tag-name" name="name" value="${escapeHtml(modal.tag)}" autofocus />
+          <div class="field-error" data-error-for="name"></div>
+        </div>
+        <div class="btn-row">
+          <button type="button" class="btn" data-action="close-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    `);
+  }
+
+  if (modal.type === 'confirm-delete-tag') {
+    return wrap(`
+      <h2 class="modal-title">Delete tag "${escapeHtml(modal.tag)}"?</h2>
+      <p class="hint">This removes the tag from all prompts. Prompts themselves will not be deleted.</p>
+      <div class="btn-row">
+        <button type="button" class="btn" data-action="close-modal">Cancel</button>
+        <button type="button" class="btn btn-danger" data-action="confirm-delete-tag" data-tag="${escapeHtml(modal.tag)}">Delete</button>
+      </div>
+    `);
+  }
+
   if (modal.type === 'ask-prompt-action') {
     return wrap(`
       <h2 class="modal-title">"${escapeHtml(modal.title)}"</h2>

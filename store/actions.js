@@ -115,6 +115,24 @@ export async function removeCategory(id, reassignToId = null) {
   setState({ categories: root.categories, prompts: root.prompts });
 }
 
+// --- Tags ---
+
+export async function renameTag(oldName, newName) {
+  const prompts = await storage.renameTag(oldName, newName);
+  const filter = getState().libraryFilter;
+  const patch = { prompts };
+  if (filter.type === 'tag' && filter.value === oldName) patch.libraryFilter = { type: 'tag', value: newName };
+  setState(patch);
+}
+
+export async function removeTag(name) {
+  const prompts = await storage.deleteTag(name);
+  const filter = getState().libraryFilter;
+  const patch = { prompts };
+  if (filter.type === 'tag' && filter.value === name) patch.libraryFilter = { type: 'all', value: null };
+  setState(patch);
+}
+
 // --- Settings ---
 
 export async function updateSettings(patch) {

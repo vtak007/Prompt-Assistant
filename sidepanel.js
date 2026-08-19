@@ -13,7 +13,7 @@ import { renderOptimizeView } from './views/OptimizeView.js';
 import { renderImportExportView } from './views/ImportExportView.js';
 import { renderSearchView } from './views/SearchView.js';
 import { renderSettingsView } from './views/SettingsView.js';
-import { validatePrompt, validateCategoryName, normalizeTag } from './utils/validation.js';
+import { validatePrompt, validateCategoryName, validateTagName, normalizeTag } from './utils/validation.js';
 import { copyToClipboard } from './services/clipboard.js';
 import { insertIntoActiveTab } from './services/promptInsertion.js';
 import { optimizePrompt, fetchAnthropicModels } from './services/optimizer.js';
@@ -255,6 +255,19 @@ document.getElementById('app').addEventListener('click', async (event) => {
     case 'select-tag':
       actions.setLibraryFilter({ type: 'tag', value: el.dataset.tag });
       break;
+    case 'edit-tag':
+      actions.openModal({ type: 'edit-tag', tag: el.dataset.tag });
+      break;
+    case 'delete-tag':
+      actions.openModal({ type: 'confirm-delete-tag', tag: el.dataset.tag });
+      break;
+    case 'confirm-delete-tag': {
+      const tag = el.dataset.tag;
+      await actions.removeTag(tag);
+      actions.closeModal();
+      actions.showToast('Tag deleted');
+      break;
+    }
 
     // Prompt card actions
     case 'toggle-favorite':
@@ -646,6 +659,20 @@ document.getElementById('app').addEventListener('submit', async (event) => {
       return;
     }
     await actions.renameCategory(id, cleanName);
+    actions.closeModal();
+    return;
+  }
+
+  if (form.dataset.modalForm === 'edit-tag') {
+    const oldTag = form.dataset.tag;
+    const name = qs(form, '[name="name"]').value;
+    const allTags = [...new Set(getState().prompts.flatMap((p) => p.tags || []))];
+    const { valid, error, name: cleanName } = validateTagName(name, allTags, oldTag);
+    if (!valid) {
+      qs(form, '[data-error-for="name"]').textContent = error;
+      return;
+    }
+    await actions.renameTag(oldTag, cleanName);
     actions.closeModal();
     return;
   }

@@ -42,7 +42,11 @@ export function renderLibraryView(state) {
       return `
         <div class="list-item ${selected ? 'is-selected' : ''}" data-action="select-tag" data-tag="${escapeHtml(tag)}" tabindex="0" role="button">
           <span># ${escapeHtml(tag)}</span>
-          <span class="count">${count}</span>
+          <span style="display:flex; align-items:center; gap:6px;">
+            <span class="count">${count}</span>
+            <button class="icon-btn" data-action="edit-tag" data-tag="${escapeHtml(tag)}" aria-label="Rename tag ${escapeHtml(tag)}" title="Rename tag">✎</button>
+            <button class="icon-btn" data-action="delete-tag" data-tag="${escapeHtml(tag)}" aria-label="Delete tag ${escapeHtml(tag)}" title="Delete tag">🗑</button>
+          </span>
         </div>`;
     })
     .join('');
