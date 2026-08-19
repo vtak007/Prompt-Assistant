@@ -215,6 +215,15 @@ document.getElementById('app').addEventListener('click', async (event) => {
       break;
 
     // Library
+    case 'toggle-categories':
+      actions.toggleCategoriesExpanded();
+      break;
+    case 'toggle-tags':
+      actions.toggleTagsExpanded();
+      break;
+    case 'toggle-favorites':
+      actions.toggleFavoritesExpanded();
+      break;
     case 'add-category':
       actions.openModal({ type: 'new-category', context: state.currentView === 'library' ? 'library' : 'form' });
       break;
@@ -245,9 +254,6 @@ document.getElementById('app').addEventListener('click', async (event) => {
     }
     case 'select-all-prompts':
       actions.setLibraryFilter({ type: 'all', value: null });
-      break;
-    case 'select-favorites':
-      actions.setLibraryFilter({ type: 'favorites', value: null });
       break;
     case 'select-category':
       actions.setLibraryFilter({ type: 'category', value: id });

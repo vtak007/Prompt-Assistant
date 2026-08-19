@@ -4,7 +4,8 @@ import { renderTagChip } from '../components/TagChip.js';
 export function renderPromptForm(state, { isEdit = false } = {}) {
   const { categories } = state;
   const draft = state.formDraft;
-  const categoryOptions = categories
+  const categoryOptions = [...categories]
+    .sort((a, b) => a.name.localeCompare(b.name))
     .map((c) => `<option value="${c.id}" ${draft.categoryId === c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`)
     .join('');
   const tagChips = draft.tags.map((t) => renderTagChip(t, { removable: true })).join('');

@@ -4,23 +4,23 @@ import { renderPromptCard } from '../components/PromptCard.js';
 function computeTagCounts(prompts) {
   const counts = {};
   prompts.forEach((p) => (p.tags || []).forEach((t) => (counts[t] = (counts[t] || 0) + 1)));
-  return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  return Object.entries(counts).sort((a, b) => a[0].localeCompare(b[0]));
 }
 
 function filterPrompts(prompts, filter) {
   if (filter.type === 'category') return prompts.filter((p) => p.categoryId === filter.value);
   if (filter.type === 'tag') return prompts.filter((p) => (p.tags || []).includes(filter.value));
-  if (filter.type === 'favorites') return prompts.filter((p) => p.isFavorite);
   return prompts;
 }
 
 export function renderLibraryView(state) {
-  const { categories, prompts, libraryFilter } = state;
+  const { categories, prompts, libraryFilter, categoriesExpanded, tagsExpanded, favoritesExpanded } = state;
   const tagCounts = computeTagCounts(prompts);
-  const favoritesCount = prompts.filter((p) => p.isFavorite).length;
+  const favoritePrompts = [...prompts].filter((p) => p.isFavorite).sort((a, b) => a.title.localeCompare(b.title));
   const filtered = filterPrompts(prompts, libraryFilter);
 
-  const categoryItems = categories
+  const categoryItems = [...categories]
+    .sort((a, b) => a.name.localeCompare(b.name))
     .map((c) => {
       const count = prompts.filter((p) => p.categoryId === c.id).length;
       const selected = libraryFilter.type === 'category' && libraryFilter.value === c.id;
@@ -51,42 +51,65 @@ export function renderLibraryView(state) {
     })
     .join('');
 
-  const promptList = filtered.length
-    ? filtered.map(renderPromptCard).join('')
-    : `<div class="empty-state">
-        ${
-          prompts.length === 0
-            ? `<p>No prompts saved yet.</p><p>Create your first prompt to begin building your library.</p>
-               <button class="btn btn-primary" data-action="navigate" data-view="create">Create Prompt</button>`
-            : libraryFilter.type === 'favorites'
-            ? `<p>You haven't favorited any prompts yet.</p>`
-            : `<p>No prompts in this filter yet.</p>`
-        }
-      </div>`;
+  const favoriteItems = favoritePrompts
+    .map(
+      (p) => `
+        <div class="list-item" data-action="open-prompt" data-id="${p.id}" tabindex="0" role="button">
+          <span>★ ${escapeHtml(p.title)}</span>
+        </div>`
+    )
+    .join('');
+
+  const promptList =
+    prompts.length === 0
+      ? `<div class="empty-state">
+          <p>No prompts saved yet.</p><p>Create your first prompt to begin building your library.</p>
+          <button class="btn btn-primary" data-action="navigate" data-view="create">Create Prompt</button>
+        </div>`
+      : libraryFilter.type === 'none'
+      ? `<div class="empty-state"><p class="hint">Select a category, tag, or favorite above, or use Search to find a prompt.</p></div>`
+      : filtered.length
+      ? filtered.map(renderPromptCard).join('')
+      : `<div class="empty-state"><p>No prompts in this filter yet.</p></div>`;
 
   return `
     <section>
       <h2 class="section-heading" style="display:flex; align-items:center; justify-content:space-between;">
-        <span>Categories</span>
+        <span data-action="toggle-categories" tabindex="0" role="button" aria-expanded="${categoriesExpanded}" style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <span>${categoriesExpanded ? '▾' : '▸'}</span>
+          <span>Categories</span>
+        </span>
         <button class="icon-btn" data-action="add-category" aria-label="Add category" title="Add category">+</button>
       </h2>
-      <div class="list-item ${libraryFilter.type === 'all' ? 'is-selected' : ''}" data-action="select-all-prompts" tabindex="0" role="button">
+      ${
+        categoriesExpanded
+          ? `<div class="list-item ${libraryFilter.type === 'all' ? 'is-selected' : ''}" data-action="select-all-prompts" tabindex="0" role="button">
         <span>▦ All Prompts</span>
         <span class="count">${prompts.length}</span>
       </div>
-      ${categoryItems}
+      ${categoryItems}`
+          : ''
+      }
     </section>
 
     <section style="margin-top: var(--space-5);">
-      <h2 class="section-heading">Tags</h2>
-      ${tagItems || '<p class="hint">No tags yet.</p>'}
+      <h2 class="section-heading">
+        <span data-action="toggle-tags" tabindex="0" role="button" aria-expanded="${tagsExpanded}" style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <span>${tagsExpanded ? '▾' : '▸'}</span>
+          <span>Tags</span>
+        </span>
+      </h2>
+      ${tagsExpanded ? tagItems || '<p class="hint">No tags yet.</p>' : ''}
     </section>
 
     <section style="margin-top: var(--space-5);">
-      <div class="list-item ${libraryFilter.type === 'favorites' ? 'is-selected' : ''}" data-action="select-favorites" tabindex="0" role="button">
-        <span>☆ Favorites</span>
-        <span class="count">${favoritesCount}</span>
-      </div>
+      <h2 class="section-heading">
+        <span data-action="toggle-favorites" tabindex="0" role="button" aria-expanded="${favoritesExpanded}" style="cursor:pointer; display:flex; align-items:center; gap:6px;">
+          <span>${favoritesExpanded ? '▾' : '▸'}</span>
+          <span>Favorites</span>
+        </span>
+      </h2>
+      ${favoritesExpanded ? favoriteItems || '<p class="hint">No favorites yet.</p>' : ''}
     </section>
 
     <section style="margin-top: var(--space-5);">

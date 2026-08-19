@@ -153,6 +153,18 @@ export function setLibraryFilter(filter) {
   setState({ libraryFilter: filter });
 }
 
+export function toggleCategoriesExpanded() {
+  setState({ categoriesExpanded: !getState().categoriesExpanded });
+}
+
+export function toggleTagsExpanded() {
+  setState({ tagsExpanded: !getState().tagsExpanded });
+}
+
+export function toggleFavoritesExpanded() {
+  setState({ favoritesExpanded: !getState().favoritesExpanded });
+}
+
 export function setSearchFilters(patch) {
   setState({ searchFilters: { ...getState().searchFilters, ...patch } });
 }

@@ -8,7 +8,10 @@ let state = {
   // transient UI state
   currentView: 'library',
   editingPromptId: null,
-  libraryFilter: { type: 'all', value: null }, // {type: 'all'|'category'|'tag'|'favorites', value}
+  libraryFilter: { type: 'none', value: null }, // {type: 'none'|'all'|'category'|'tag', value} - 'none' = nothing selected yet
+  categoriesExpanded: false,
+  tagsExpanded: false,
+  favoritesExpanded: false,
   searchFilters: { keyword: '', categoryId: '', tagId: '' },
   optimizeSourceId: null,
   activeModal: null,
