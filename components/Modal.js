@@ -174,7 +174,7 @@ export function renderModal(state) {
 
   if (modal.type === 'help') {
     return wrap(`
-      <h2 class="modal-title">Prompt Assistant Help</h2>
+      <h2 class="modal-title">Prompt Whisperer Help</h2>
       <p class="hint">Save, organize, and reuse your AI prompts. Click a prompt to copy or insert it into the active tab's text field.</p>
       <p class="hint">Shortcuts: Ctrl/Cmd+N new prompt · Ctrl/Cmd+F search · Ctrl/Cmd+S save · Esc close · "/" quick search.</p>
       <div class="btn-row">

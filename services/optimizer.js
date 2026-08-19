@@ -84,7 +84,7 @@ async function anthropicProvider({ prompt, goal, instructions, model, apiKey }) 
       }),
     });
   } catch (err) {
-    console.error('[Prompt Assistant] Anthropic request failed:', err);
+    console.error('[Prompt Whisperer] Anthropic request failed:', err);
     throw new Error('Network error — could not reach Anthropic. Check your connection.');
   }
 
@@ -95,7 +95,7 @@ async function anthropicProvider({ prompt, goal, instructions, model, apiKey }) 
     } catch {
       /* response wasn't JSON */
     }
-    console.error('[Prompt Assistant] Anthropic API error:', res.status, detail);
+    console.error('[Prompt Whisperer] Anthropic API error:', res.status, detail);
     if (res.status === 401) throw new Error('API key was rejected. Check your key in Settings.');
     if (res.status === 429) throw new Error('Rate limited by Anthropic. Try again shortly.');
     throw new Error(`Anthropic request failed (${res.status}).`);
@@ -138,7 +138,7 @@ export async function fetchAnthropicModels(apiKey) {
       },
     });
   } catch (err) {
-    console.error('[Prompt Assistant] Anthropic models request failed:', err);
+    console.error('[Prompt Whisperer] Anthropic models request failed:', err);
     throw new Error('Network error — could not reach Anthropic. Check your connection.');
   }
 
@@ -149,7 +149,7 @@ export async function fetchAnthropicModels(apiKey) {
     } catch {
       /* response wasn't JSON */
     }
-    console.error('[Prompt Assistant] Anthropic models API error:', res.status, detail);
+    console.error('[Prompt Whisperer] Anthropic models API error:', res.status, detail);
     if (res.status === 401) throw new Error('API key was rejected. Check your key in Settings.');
     if (res.status === 429) throw new Error('Rate limited by Anthropic. Try again shortly.');
     throw new Error(`Anthropic request failed (${res.status}).`);

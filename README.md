@@ -1,4 +1,4 @@
-# Prompt Assistant
+# Prompt Whisperer
 
 A Chrome extension for creating, organizing, searching, importing/exporting, and reusing AI prompts from a persistent side panel.
 

@@ -27,7 +27,7 @@ export function renderImportExportView(state) {
 
     <h2 class="section-heading" style="margin-top: var(--space-5);">Import</h2>
     <div class="field">
-      <label for="import-file">Choose a Prompt Assistant JSON backup file</label>
+      <label for="import-file">Choose a Prompt Whisperer JSON backup file</label>
       <input type="file" id="import-file" data-field="import-file" accept="application/json,.json" />
     </div>
   `;

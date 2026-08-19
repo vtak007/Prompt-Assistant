@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Guidance for working in the Prompt Assistant Chrome extension repo. See the user's global `~/.claude/CLAUDE.md` for cross-project conventions (branching, doc-update gating, `.ini` handling, etc.) — not duplicated here.
+Guidance for working in the Prompt Whisperer Chrome extension repo (formerly "Prompt Assistant"). See the user's global `~/.claude/CLAUDE.md` for cross-project conventions (branching, doc-update gating, `.ini` handling, etc.) — not duplicated here.
 
 ## Key Files
 
@@ -38,4 +38,4 @@ Guidance for working in the Prompt Assistant Chrome extension repo. See the user
 
 ## Deferred / future work
 
-Additional AI providers (OpenAI/Google/local endpoint) beyond the now-live Anthropic one, cloud sync, prompt variables/templates, version/usage history, multiple libraries, bulk edit, Markdown/CSV import, command palette, site-specific insertion adapters, and an undockable/floating panel window (like Bitwarden's pop-out) are all intentionally out of scope for this release — see `Prompt Assistant Features.md` §33 and the approved plans for details.
+Additional AI providers (OpenAI/Google/local endpoint) beyond the now-live Anthropic one, cloud sync, prompt variables/templates, version/usage history, multiple libraries, bulk edit, Markdown/CSV import, command palette, site-specific insertion adapters, and an undockable/floating panel window (like Bitwarden's pop-out) are all intentionally out of scope for this release — see `Prompt Whisperer Features.md` §33 and the approved plans for details.

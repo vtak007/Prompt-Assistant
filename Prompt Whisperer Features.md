@@ -1,8 +1,8 @@
-# Prompt Assistant — Chrome Extension
+# Prompt Whisperer — Chrome Extension
 
 **Revision:** Rev 1
 
-Prompt Assistant is a Chrome extension for creating, organizing, optimizing, searching, importing, exporting, and reusing AI prompts from a persistent sidebar interface.
+Prompt Whisperer is a Chrome extension for creating, organizing, optimizing, searching, importing, exporting, and reusing AI prompts from a persistent sidebar interface.
 
 The extension should use a polished dark-mode UI with purple accent styling, rounded panels, compact controls, and a layout inspired by the supplied UI mockup.
 
@@ -10,7 +10,7 @@ The extension should use a polished dark-mode UI with purple accent styling, rou
 
 ## 1. Product Goal
 
-Prompt Assistant should let a user maintain a personal prompt library directly inside Chrome.
+Prompt Whisperer should let a user maintain a personal prompt library directly inside Chrome.
 
 The user should be able to:
 
@@ -78,13 +78,13 @@ The mockup shows several panels at once for design reference, but the production
 At the top of the sidebar display:
 
 - Application icon.
-- Extension name: **Prompt Assistant**.
+- Extension name: **Prompt Whisperer**.
 - Settings gear icon aligned to the upper-right.
 
 Example:
 
 ```text
-[Icon] Prompt Assistant                         [Settings]
+[Icon] Prompt Whisperer                         [Settings]
 ```
 
 Clicking the Settings icon opens the Settings view.
@@ -585,7 +585,7 @@ Markdown
 Suggested export file:
 
 ```text
-prompt-assistant-backup-YYYY-MM-DD.json
+prompt-whisperer-backup-YYYY-MM-DD.json
 ```
 
 ---
@@ -598,7 +598,7 @@ Example:
 {
   "schemaVersion": 1,
   "exportedAt": "2026-08-18T12:00:00Z",
-  "application": "Prompt Assistant",
+  "application": "Prompt Whisperer",
   "categories": [],
   "prompts": []
 }
@@ -931,7 +931,7 @@ Use migrations when the storage schema changes in future versions.
 # 23. Suggested Project Structure
 
 ```text
-prompt-assistant/
+prompt-whisperer/
 │
 ├── manifest.json
 ├── sidepanel.html
@@ -1276,7 +1276,7 @@ Potential future additions:
 
 The extension is considered functionally complete when a user can:
 
-1. Open Prompt Assistant as a Chrome sidebar.
+1. Open Prompt Whisperer as a Chrome sidebar.
 2. Browse prompts from the Library.
 3. Create categories.
 4. Create prompts with title, category, tags, content, and notes.
@@ -1322,7 +1322,7 @@ A typical workflow should be:
 ```text
 Open Chrome sidebar
         ↓
-Prompt Assistant
+Prompt Whisperer
         ↓
 Library
         ↓

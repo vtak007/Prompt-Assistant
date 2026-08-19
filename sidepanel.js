@@ -168,7 +168,7 @@ async function runOptimize({ prompt, goal, instructions }) {
       optimizeLoading: false,
     });
   } catch (err) {
-    console.error('[Prompt Assistant] Optimize failed:', err.message);
+    console.error('[Prompt Whisperer] Optimize failed:', err.message);
     setState({ optimizeLoading: false });
     actions.showToast(err.message || 'Optimization failed.', 'error');
   }
@@ -456,7 +456,7 @@ document.getElementById('app').addEventListener('click', async (event) => {
         });
         actions.showToast(`Model list updated (${models.length} models).`);
       } catch (err) {
-        console.error('[Prompt Assistant] Refresh models failed:', err.message);
+        console.error('[Prompt Whisperer] Refresh models failed:', err.message);
         actions.showToast(err.message || 'Could not fetch model list.', 'error');
       } finally {
         setState({ modelsLoading: false });

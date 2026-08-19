@@ -17,7 +17,7 @@ export function buildExport({ categories, prompts, settings }, { scope, includeN
   const payload = {
     schemaVersion: SCHEMA_VERSION,
     exportedAt: new Date().toISOString(),
-    application: 'Prompt Assistant',
+    application: 'Prompt Whisperer',
     categories: exportCategories,
     prompts: exportPrompts.map((p) => (includeNotes ? p : { ...p, notes: '' })),
   };
@@ -39,7 +39,7 @@ export function downloadJson(jsonString, filename) {
 
 export function defaultExportFilename() {
   const date = new Date().toISOString().slice(0, 10);
-  return `prompt-assistant-backup-${date}.json`;
+  return `prompt-whisperer-backup-${date}.json`;
 }
 
 export function parseImportFile(text) {
@@ -53,7 +53,7 @@ export function parseImportFile(text) {
     return { valid: false, error: 'This file is missing a schema version and cannot be imported.' };
   }
   if (data.schemaVersion > SCHEMA_VERSION) {
-    return { valid: false, error: `This file uses a newer schema version (${data.schemaVersion}) than this version of Prompt Assistant supports.` };
+    return { valid: false, error: `This file uses a newer schema version (${data.schemaVersion}) than this version of Prompt Whisperer supports.` };
   }
   if (!Array.isArray(data.categories) || !Array.isArray(data.prompts)) {
     return { valid: false, error: 'This file is missing categories or prompts data.' };

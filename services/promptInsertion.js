@@ -43,7 +43,7 @@ export async function insertIntoActiveTab(text) {
   try {
     [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   } catch (err) {
-    console.error('[Prompt Assistant] tabs.query failed:', err);
+    console.error('[Prompt Whisperer] tabs.query failed:', err);
     return { ok: false, reason: 'tab-unavailable' };
   }
   if (!tab || !tab.id) {
@@ -58,7 +58,7 @@ export async function insertIntoActiveTab(text) {
     });
     return result || { ok: false, reason: 'no-target' };
   } catch (err) {
-    console.error('[Prompt Assistant] executeScript failed:', err);
+    console.error('[Prompt Whisperer] executeScript failed:', err);
     return { ok: false, reason: 'tab-unavailable' };
   }
 }

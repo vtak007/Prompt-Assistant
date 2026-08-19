@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Prompt Assistant",
+  "name": "Prompt Whisperer",
   "version": "1.0.0",
   "description": "Create, organize, optimize, and reuse AI prompts from a persistent Chrome sidebar.",
   "icons": {
