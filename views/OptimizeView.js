@@ -26,14 +26,20 @@ export function renderOptimizeView(state) {
       <textarea id="optimize-instructions" data-field="optimize-instructions" rows="3" placeholder="Any additional instructions...">${escapeHtml(draft.instructions)}</textarea>
     </div>
     <div class="btn-row">
-      <button type="button" class="btn btn-primary" data-action="run-optimize">Optimize Prompt</button>
+      <button type="button" class="btn btn-primary" data-action="run-optimize" ${state.optimizeLoading ? 'disabled' : ''}>
+        ${state.optimizeLoading ? 'Optimizing…' : 'Optimize Prompt'}
+      </button>
     </div>
 
     ${
       result
         ? `
       <section style="margin-top: var(--space-5);">
-        <p class="hint">Preview mode — using built-in mock optimizer.</p>
+        <p class="hint">${
+          result.provider === 'anthropic'
+            ? `Live result from Anthropic (model: ${escapeHtml(result.model || '')}).`
+            : 'Preview mode — using built-in mock optimizer.'
+        }</p>
         <details style="margin-bottom: var(--space-4);">
           <summary>Original Prompt</summary>
           <p class="hint" style="white-space: pre-wrap;">${escapeHtml(result.original)}</p>
@@ -46,7 +52,7 @@ export function renderOptimizeView(state) {
           <button type="button" class="btn" data-action="copy-optimized">Copy</button>
           ${source ? `<button type="button" class="btn" data-action="replace-original">Replace Original</button>` : ''}
           <button type="button" class="btn" data-action="save-as-new">Save as New Prompt</button>
-          <button type="button" class="btn" data-action="re-optimize">Re-optimize</button>
+          <button type="button" class="btn" data-action="re-optimize" ${state.optimizeLoading ? 'disabled' : ''}>${state.optimizeLoading ? 'Re-optimizing…' : 'Re-optimize'}</button>
           <button type="button" class="btn" data-action="navigate" data-view="library">Return to Library</button>
         </div>
       </section>`

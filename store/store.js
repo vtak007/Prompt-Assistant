@@ -21,6 +21,7 @@ let state = {
   importParsedData: null,
   optimizeDraft: { prompt: '', goal: 'general', instructions: '' },
   optimizeResult: null,
+  optimizeLoading: false,
 };
 
 export function getState() {

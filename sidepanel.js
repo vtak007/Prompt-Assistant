@@ -151,6 +151,22 @@ async function doCopy(id) {
   actions.showToast(ok ? 'Prompt copied' : 'Could not copy prompt', ok ? 'info' : 'error');
 }
 
+async function runOptimize({ prompt, goal, instructions }) {
+  const { provider, model, apiKey } = getState().settings.optimization;
+  setState({ optimizeLoading: true });
+  try {
+    const result = await optimizePrompt({ prompt, goal, instructions, provider, model, apiKey });
+    setState({
+      optimizeResult: { original: prompt, optimized: result.optimized, provider: result.provider, model: result.model },
+      optimizeLoading: false,
+    });
+  } catch (err) {
+    console.error('[Prompt Assistant] Optimize failed:', err.message);
+    setState({ optimizeLoading: false });
+    actions.showToast(err.message || 'Optimization failed.', 'error');
+  }
+}
+
 async function doInsert(id) {
   const prompt = getState().prompts.find((p) => p.id === id);
   if (!prompt) return;
@@ -322,16 +338,14 @@ document.getElementById('app').addEventListener('click', async (event) => {
       const goal = qs(viewEl, '[data-field="optimize-goal"]')?.value || 'general';
       const instructions = qs(viewEl, '[data-field="optimize-instructions"]')?.value || '';
       setState({ optimizeDraft: { prompt: promptText, goal, instructions } });
-      const { optimized } = await optimizePrompt({ prompt: promptText, goal, instructions, provider: 'mock' });
-      setState({ optimizeResult: { original: promptText, optimized } });
+      await runOptimize({ prompt: promptText, goal, instructions });
       break;
     }
     case 're-optimize': {
       const editedText = qs(viewEl, '[data-field="optimize-result-text"]')?.value;
       const draft = getState().optimizeDraft;
       const promptText = editedText || draft.prompt;
-      const { optimized } = await optimizePrompt({ ...draft, prompt: promptText, provider: 'mock' });
-      setState({ optimizeResult: { original: promptText, optimized } });
+      await runOptimize({ ...draft, prompt: promptText });
       break;
     }
     case 'copy-optimized': {
@@ -465,6 +479,15 @@ document.getElementById('app').addEventListener('change', async (event) => {
       break;
     case 'setting-pretty-print':
       await actions.updateSettings({ importExport: { ...state.settings.importExport, prettyPrintJson: el.checked } });
+      break;
+    case 'setting-optimization-provider':
+      await actions.updateSettings({ optimization: { ...state.settings.optimization, provider: el.value } });
+      break;
+    case 'setting-optimization-model':
+      await actions.updateSettings({ optimization: { ...state.settings.optimization, model: el.value } });
+      break;
+    case 'setting-optimization-api-key':
+      await actions.updateSettings({ optimization: { ...state.settings.optimization, apiKey: el.value } });
       break;
     default:
       break;

@@ -45,15 +45,79 @@ async function mockProvider({ prompt, goal, instructions }) {
     parts.push('', `Additional instructions: ${instructions.trim()}`);
   }
   parts.push('', 'Desired output format: match the format implied above, or ask a clarifying question if it is ambiguous.');
-  return parts.join('\n');
+  return { text: parts.join('\n'), model: 'mock' };
+}
+
+const DEFAULT_ANTHROPIC_MODEL = 'claude-haiku-4-5-20251001';
+
+async function anthropicProvider({ prompt, goal, instructions, model, apiKey }) {
+  if (!apiKey || !apiKey.trim()) {
+    throw new Error('API key is missing.');
+  }
+  const role = GOAL_ROLE[goal] || GOAL_ROLE.general;
+  const userMessage = [
+    `Act as ${role}. Rewrite the following prompt to optimize it for this goal, incorporating any additional instructions.`,
+    '',
+    'Original prompt:',
+    prompt.trim(),
+    instructions && instructions.trim() ? `\nAdditional instructions: ${instructions.trim()}` : '',
+    '',
+    'Return ONLY the rewritten prompt text — no preamble, no commentary, no markdown fences.',
+  ].join('\n');
+
+  const usedModel = model && model.trim() ? model.trim() : DEFAULT_ANTHROPIC_MODEL;
+
+  let res;
+  try {
+    res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: usedModel,
+        max_tokens: 2048,
+        messages: [{ role: 'user', content: userMessage }],
+      }),
+    });
+  } catch (err) {
+    console.error('[Prompt Assistant] Anthropic request failed:', err);
+    throw new Error('Network error — could not reach Anthropic. Check your connection.');
+  }
+
+  if (!res.ok) {
+    let detail = '';
+    try {
+      detail = (await res.json())?.error?.message || '';
+    } catch {
+      /* response wasn't JSON */
+    }
+    console.error('[Prompt Assistant] Anthropic API error:', res.status, detail);
+    if (res.status === 401) throw new Error('API key was rejected. Check your key in Settings.');
+    if (res.status === 429) throw new Error('Rate limited by Anthropic. Try again shortly.');
+    throw new Error(`Anthropic request failed (${res.status}).`);
+  }
+
+  const data = await res.json();
+  const text = (data.content || [])
+    .filter((block) => block.type === 'text')
+    .map((block) => block.text)
+    .join('')
+    .trim();
+  if (!text) throw new Error('Anthropic returned an empty response.');
+  return { text, model: data.model || usedModel };
 }
 
 const PROVIDERS = {
   mock: mockProvider,
+  anthropic: anthropicProvider,
 };
 
-export async function optimizePrompt({ prompt, goal = 'general', instructions = '', provider = 'mock', model }) {
+export async function optimizePrompt({ prompt, goal = 'general', instructions = '', provider = 'mock', model, apiKey }) {
   const impl = PROVIDERS[provider] || PROVIDERS.mock;
-  const optimized = await impl({ prompt, goal, instructions, model });
-  return { optimized, provider, goal };
+  const { text, model: usedModel } = await impl({ prompt, goal, instructions, model, apiKey });
+  return { optimized: text, provider, goal, model: usedModel };
 }

@@ -1,3 +1,5 @@
+import { escapeHtml } from '../utils/dom.js';
+
 export function renderSettingsView(state) {
   const s = state.settings;
   return `
@@ -40,14 +42,19 @@ export function renderSettingsView(state) {
     <h2 class="section-heading">Optimization Settings</h2>
     <div class="field">
       <label for="setting-provider">AI Provider</label>
-      <select id="setting-provider" disabled>
-        <option>Mock (built-in preview)</option>
+      <select id="setting-provider" data-field="setting-optimization-provider">
+        <option value="mock" ${s.optimization.provider === 'mock' ? 'selected' : ''}>Mock (offline preview)</option>
+        <option value="anthropic" ${s.optimization.provider === 'anthropic' ? 'selected' : ''}>Anthropic (Claude)</option>
       </select>
-      <div class="hint">Live AI providers are coming soon — this release uses a built-in mock optimizer.</div>
+    </div>
+    <div class="field">
+      <label for="setting-model">Model</label>
+      <input type="text" id="setting-model" data-field="setting-optimization-model" value="${escapeHtml(s.optimization.model)}" placeholder="claude-haiku-4-5-20251001" />
     </div>
     <div class="field">
       <label for="setting-api-key">API Key</label>
-      <input type="text" id="setting-api-key" disabled placeholder="Coming soon" />
+      <input type="password" id="setting-api-key" data-field="setting-optimization-api-key" value="${escapeHtml(s.optimization.apiKey)}" />
+      <div class="hint">Stored locally in this browser only, and sent directly to Anthropic's API when you click Optimize.</div>
     </div>
 
     <h2 class="section-heading">Data</h2>

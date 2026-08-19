@@ -7,7 +7,7 @@ A Chrome extension for creating, organizing, searching, importing/exporting, and
 - **Library** — browse prompts by category, tag, or favorites.
 - **Create / Edit** — save prompts with a title, category, tags, content, and optional notes.
 - **Search** — combined keyword + category + tag filtering, with a `/` quick-search shortcut.
-- **Optimize Prompt** — rewrite a prompt against a chosen goal (Clarity, Coding, Research, etc.) using a built-in mock optimizer. The `optimizePrompt()` abstraction in `services/optimizer.js` is designed so a real AI provider (OpenAI, Anthropic, Google, a local endpoint) can be plugged in later without touching the UI.
+- **Optimize Prompt** — rewrite a prompt against a chosen goal (Clarity, Coding, Research, etc.). Ships with a built-in offline mock optimizer by default; switch **Settings → AI Provider** to "Anthropic (Claude)" and paste in your own Anthropic API key to get live results from Claude instead. The `optimizePrompt()` abstraction in `services/optimizer.js` supports both and can take further providers (OpenAI, Google, a local endpoint) later without touching the UI.
 - **Import / Export** — back up or transfer your library as JSON, with duplicate detection (Skip / Replace / Keep Both) on import.
 - **Insert into active tab** — insert a prompt's text into the focused text field on whatever page you're on (ChatGPT, Claude, Gemini, or any `<textarea>`/`<input>`/`contenteditable`), without auto-submitting.
 - **Settings** — appearance, default startup view, prompt click behavior, import/export preferences, and a "Reset to sample data" action.
@@ -23,8 +23,15 @@ A Chrome extension for creating, organizing, searching, importing/exporting, and
 
 Plain HTML/CSS/JS (ES modules), no build step, no framework. Manifest V3 with the Chrome Side Panel API. Data is stored in `chrome.storage.local`. See `CLAUDE.md` for the file map.
 
+## Using a live AI provider for Optimize Prompt
+
+1. Get an API key from the [Anthropic Console](https://console.anthropic.com/).
+2. In the extension, go to **Settings → Optimization Settings**, set **AI Provider** to "Anthropic (Claude)", optionally set a **Model** (defaults to `claude-haiku-4-5-20251001` if left blank), and paste your key into **API Key**.
+3. The key is stored in `chrome.storage.local` (plain text, like most browser extensions) and is only ever sent directly from your browser to Anthropic's API when you click Optimize — never logged to the console, never sent anywhere else. Anyone with access to this Chrome profile could read it via DevTools, so treat it like any other locally-stored secret.
+
 ## Known limitations (by design, for this release)
 
-- The Optimize Prompt feature uses a deterministic **mock** provider, not a live AI call — the Settings screen's provider/API key fields are present but disabled ("coming soon").
+- Optimize Prompt's live mode only supports Anthropic; other providers (OpenAI, Google, a local endpoint) aren't wired up yet, though the abstraction supports adding them.
+- There's no server-side proxy or spend cap — a live API key is used directly and unmetered by the extension; standard Anthropic rate limits apply.
 - Insertion cannot reach cross-origin iframe composers or closed shadow-DOM editors, and never works on internal `chrome://` pages (Chrome blocks script injection there for all extensions).
 - No "undockable" floating window (like Bitwarden's pop-out) yet — deferred as a future enhancement.
