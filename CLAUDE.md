@@ -39,3 +39,5 @@ Guidance for working in the Prompt Whisperer Chrome extension repo (formerly "Pr
 ## Deferred / future work
 
 Additional AI providers (OpenAI/Google/local endpoint) beyond the now-live Anthropic one, cloud sync, prompt variables/templates, version/usage history, multiple libraries, bulk edit, Markdown/CSV import, command palette, site-specific insertion adapters, and an undockable/floating panel window (like Bitwarden's pop-out) are all intentionally out of scope for this release — see `Prompt Whisperer Features.md` §33 and the approved plans for details.
+
+OpenAI and Gemini specifically cannot be added as `services/optimizer.js` providers using the same direct-`fetch`-from-side-panel pattern as Anthropic — neither API permits browser-origin CORS calls, and Google's docs warn against client-side API keys. See `Prompt Whisperer Features.md` §33 for the local-companion-process approach considered as the path forward if this is picked up.

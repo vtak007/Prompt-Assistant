@@ -1269,6 +1269,7 @@ Potential future additions:
 - Prompt chaining.
 - Export to Markdown.
 - Import from Markdown or CSV.
+- Additional AI providers for prompt optimization (OpenAI, Gemini). Neither vendor's API allows direct browser-origin CORS calls the way Anthropic does (`anthropic-dangerous-direct-browser-access`), and Google's own docs warn against embedding API keys in client-side code — so `services/optimizer.js`'s current "call the vendor API straight from the side panel" pattern can't extend to them as-is. The viable path consistent with this project's no-hosted-backend design: a **local companion process** the user runs themselves (a small Node/Python script on `localhost`) that the extension's `optimizer.js` calls instead of the vendor API directly; the companion process holds the OpenAI/Gemini API key and forwards the request server-side, sidestepping both the CORS block and the client-side-key warning. This adds a "must also run this background process" installation step and a new provider type (`localProxy` or similar) in the provider registry, but avoids standing up any hosted infrastructure. A hosted proxy (Cloudflare Worker/Vercel function) was considered and rejected for now as it would require the user's API key to pass through third-party infrastructure.
 
 ---
 
