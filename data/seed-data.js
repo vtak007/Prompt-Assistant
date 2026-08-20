@@ -84,7 +84,7 @@ export const seedPrompts = [
 ];
 
 export const defaultSettings = {
-  appearance: 'dark',
+  appearance: 'light',
   defaultStartupView: 'library',
   promptClickBehavior: 'open',
   importExport: {

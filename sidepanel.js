@@ -82,7 +82,7 @@ function renderPreservingFocus(container, html) {
 let lastRenderedView = null;
 
 function render(state) {
-  document.documentElement.dataset.theme = state.settings.appearance || 'dark';
+  document.documentElement.dataset.theme = state.settings.appearance || 'light';
   headerEl.innerHTML = renderHeader();
   navEl.innerHTML = renderNavigation(state);
   renderPreservingFocus(viewEl, renderViewHtml(state));
