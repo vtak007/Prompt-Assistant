@@ -53,7 +53,14 @@ export function renderLibraryView(state) {
     })
     .join('');
 
-  const favoriteItems = favoritePrompts.map(renderPromptCard).join('');
+  const favoriteItems = favoritePrompts
+    .map(
+      (p) => `
+        <div class="list-item" data-action="open-prompt" data-id="${p.id}" tabindex="0" role="button">
+          <span class="list-item-label is-accent">${icon('starFilled')} ${escapeHtml(p.title)}</span>
+        </div>`
+    )
+    .join('');
 
   const promptList =
     prompts.length === 0
@@ -62,7 +69,7 @@ export function renderLibraryView(state) {
           <button class="btn btn-primary" data-action="navigate" data-view="create">Create Prompt</button>
         </div>`
       : libraryFilter.type === 'none'
-      ? ''
+      ? `<div class="empty-state"><p class="hint">Select a category, tag, or favorite above, or use Search to find a prompt.</p></div>`
       : filtered.length
       ? filtered.map(renderPromptCard).join('')
       : `<div class="empty-state"><p>No prompts in this filter yet.</p></div>`;
@@ -78,7 +85,11 @@ export function renderLibraryView(state) {
       </h2>
       ${
         categoriesExpanded
-          ? categoryItems
+          ? `<div class="list-item ${libraryFilter.type === 'all' ? 'is-selected' : ''}" data-action="select-all-prompts" tabindex="0" role="button">
+        <span class="list-item-label is-accent">${icon('grid')} All Prompts</span>
+        <span class="count">${prompts.length}</span>
+      </div>
+      ${categoryItems}`
           : ''
       }
     </section>
@@ -90,7 +101,7 @@ export function renderLibraryView(state) {
           <span>Tags</span>
         </span>
       </h2>
-      ${tagsExpanded ? `<div class="tag-grid">${tagItems || '<p class="hint">No tags yet.</p>'}</div>` : ''}
+      ${tagsExpanded ? tagItems || '<p class="hint">No tags yet.</p>' : ''}
     </section>
 
     <section class="library-section favorites-section">

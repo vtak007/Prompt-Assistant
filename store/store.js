@@ -9,9 +9,9 @@ let state = {
   currentView: 'library',
   editingPromptId: null,
   libraryFilter: { type: 'none', value: null }, // {type: 'none'|'all'|'category'|'tag', value} - 'none' = nothing selected yet
-  categoriesExpanded: true,
-  tagsExpanded: true,
-  favoritesExpanded: true,
+  categoriesExpanded: false,
+  tagsExpanded: false,
+  favoritesExpanded: false,
   searchFilters: { keyword: '', categoryId: '', tagId: '' },
   optimizeSourceId: null,
   activeModal: null,

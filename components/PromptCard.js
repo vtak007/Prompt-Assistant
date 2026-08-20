@@ -2,7 +2,7 @@ import { escapeHtml } from '../utils/dom.js';
 import { icon } from './icons.js';
 
 export function renderPromptCard(prompt) {
-  const tags = (prompt.tags || []).slice(0, 2).map((t) => `<span class="tag-chip">${escapeHtml(t)}</span>`).join('');
+  const tags = (prompt.tags || []).map((t) => `<span class="tag-chip">#${escapeHtml(t)}</span>`).join('');
   return `
     <article class="prompt-card" data-prompt-id="${prompt.id}">
       <button class="prompt-medallion ${prompt.isFavorite ? 'is-favorite' : ''}" data-action="toggle-favorite" data-id="${prompt.id}"

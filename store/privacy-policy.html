@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prompt Whisperer — Privacy Policy</title>
+<style>
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #1a1a1a; }
+  h1 { font-size: 1.8rem; margin-bottom: 0.2em; }
+  h2 { font-size: 1.2rem; margin-top: 2em; border-bottom: 1px solid #ddd; padding-bottom: 0.3em; }
+  .updated { color: #666; font-size: 0.9rem; margin-bottom: 2em; }
+  code { background: #f2f2f2; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  ul { padding-left: 1.3em; }
+  li { margin-bottom: 0.4em; }
+</style>
+</head>
+<body>
+
+<h1>Privacy Policy — Prompt Whisperer</h1>
+<p class="updated">Effective date: August 20, 2026</p>
+
+<p>Prompt Whisperer ("the extension") is a Chrome extension that helps you create, organize, search, and optimize AI prompts from a browser side panel. This policy explains what data the extension handles, where it is stored, and when — if ever — it leaves your device.</p>
+
+<h2>1. Data the extension stores</h2>
+<p>All of the following is stored locally in your browser profile using Chrome's <code>chrome.storage.local</code> API. It is never uploaded to any server operated by the developer of Prompt Whisperer, and the developer has no access to it:</p>
+<ul>
+  <li>Prompt text, titles, categories, tags, notes, and favorite status that you create</li>
+  <li>Your app settings (appearance, default view, click behavior, import/export preferences)</li>
+  <li>If you choose to use the optional live AI optimization feature: the Anthropic API key you provide, and your selected model</li>
+</ul>
+<p>This data stays on the device it was created on. It is not synced across devices, not backed up by the extension, and is removed if you uninstall the extension or clear your browser's site/extension data. You can also erase it yourself at any time using the "Reset to sample data" option, or by deleting individual prompts and categories.</p>
+
+<h2>2. Data sent to third parties</h2>
+<p>By default, Prompt Whisperer's "Optimize Prompt" feature runs entirely offline using a built-in mock optimizer — no data leaves your browser.</p>
+<p>If you explicitly switch <strong>Settings → AI Provider</strong> to "Anthropic (Claude)" and supply your own Anthropic API key, then when you click "Optimize":</p>
+<ul>
+  <li>The prompt text you are optimizing, your selected optimization goal, and any additional instructions you typed are sent directly from your browser to Anthropic's API (<code>api.anthropic.com</code>).</li>
+  <li>Your API key is sent along with that request, directly to Anthropic, to authenticate the call.</li>
+  <li>This request goes straight from your browser to Anthropic — it does not pass through, or get logged by, any server operated by the developer of Prompt Whisperer.</li>
+</ul>
+<p>Use of Anthropic's API is subject to <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener">Anthropic's own privacy policy</a> and terms. No data is sent to Anthropic, or any other third party, unless you have turned on this optional feature and actively click "Optimize."</p>
+
+<h2>3. The "Insert into active tab" feature</h2>
+<p>When you insert a saved prompt into a text field on a webpage (for example, a chat box on ChatGPT, Claude, or Gemini), the extension writes that text directly into the focused field on the active tab using Chrome's scripting API. This happens entirely within your browser — no data about the page you're on, or the text inserted, is transmitted anywhere or logged by the extension.</p>
+
+<h2>4. What we don't do</h2>
+<ul>
+  <li>We do not collect analytics, usage statistics, or telemetry of any kind.</li>
+  <li>We do not use tracking pixels, cookies, or third-party advertising SDKs.</li>
+  <li>We do not sell or share your data with advertisers or data brokers.</li>
+  <li>We do not read the content of pages you browse, except to insert text into a focused field when you explicitly trigger that action.</li>
+</ul>
+
+<h2>5. Permissions this extension requests, and why</h2>
+<ul>
+  <li><strong>storage</strong> — to save your prompts, categories, tags, and settings locally.</li>
+  <li><strong>sidePanel</strong> — to display the extension's interface in Chrome's side panel.</li>
+  <li><strong>activeTab / scripting</strong> — to insert prompt text into the page you're currently viewing, only when you choose to do so.</li>
+  <li><strong>Host permissions (all sites)</strong> — the side panel can be open while you're on any website, and the "insert into active tab" feature needs to be able to act on whichever site you're currently using (ChatGPT, Claude, Gemini, or any other page with a text field). Chrome's <code>activeTab</code> permission alone does not extend to actions triggered from the side panel, which is why broader host access is requested. This permission is used only to insert text you explicitly choose to insert — never to read, monitor, or transmit page content.</li>
+</ul>
+
+<h2>6. Children's privacy</h2>
+<p>Prompt Whisperer is not directed at children and is not intended for use by anyone under 13.</p>
+
+<h2>7. Changes to this policy</h2>
+<p>If this policy changes — for example, if a new AI provider or feature changes what data is collected or where it's sent — this page will be updated and the "Effective date" above will be revised. Material changes will also be reflected in the extension's Chrome Web Store listing.</p>
+
+<h2>8. Contact</h2>
+<p>Questions about this policy or how Prompt Whisperer handles data can be raised on the project's issue tracker: <a href="https://github.com/vtak007/Prompt-Whisperer/issues" target="_blank" rel="noopener">github.com/vtak007/Prompt-Whisperer/issues</a></p>
+
+</body>
+</html>

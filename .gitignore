@@ -8,3 +8,7 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.tmp.*
+
+# Exported prompt libraries — contain the user's own prompt content, keep local
+prompt-whisperer-backup-*.json
+prompt-assistant-backup-*.json

@@ -10,7 +10,7 @@ A Chrome extension for creating, organizing, searching, importing/exporting, and
 - **Optimize Prompt** — rewrite a prompt against a chosen goal (Clarity, Coding, Research, etc.). Ships with a built-in offline mock optimizer by default; switch **Settings → AI Provider** to "Anthropic (Claude)" and paste in your own Anthropic API key to get live results from Claude instead. The `optimizePrompt()` abstraction in `services/optimizer.js` supports both and can take further providers (OpenAI, Google, a local endpoint) later without touching the UI.
 - **Import / Export** — back up or transfer your library as JSON, with duplicate detection (Skip / Replace / Keep Both) on import.
 - **Insert into active tab** — insert a prompt's text into the focused text field on whatever page you're on (ChatGPT, Claude, Gemini, or any `<textarea>`/`<input>`/`contenteditable`), without auto-submitting.
-- **Settings** — appearance, default startup view, prompt click behavior, import/export preferences, and a "Reset to sample data" action.
+- **Settings** — appearance, default startup view, prompt click behavior, import/export preferences, and a "Reset to sample data" action. Appearance defaults to **Light**, which shows the brushed-chrome treatment as designed; Dark renders the same panel through an inversion filter, and System follows the host.
 
 ## Installing (unpacked)
 
@@ -21,7 +21,7 @@ A Chrome extension for creating, organizing, searching, importing/exporting, and
 
 ## Tech
 
-Plain HTML/CSS/JS (ES modules), no build step, no framework. Manifest V3 with the Chrome Side Panel API. Data is stored in `chrome.storage.local`. See `CLAUDE.md` for the file map.
+Plain HTML/CSS/JS (ES modules), no build step, no framework. Manifest V3 with the Chrome Side Panel API. Data is stored in `chrome.storage.local`. The UI is a brushed-chrome/cyan theme built entirely from CSS gradients and shadows plus an inline SVG icon set — no image assets, no icon font. See `CLAUDE.md` for the file map.
 
 ## Using a live AI provider for Optimize Prompt
 
@@ -32,7 +32,7 @@ Plain HTML/CSS/JS (ES modules), no build step, no framework. Manifest V3 with th
 
 ## Known limitations (by design, for this release)
 
-- Optimize Prompt's live mode only supports Anthropic; other providers (OpenAI, Google, a local endpoint) aren't wired up yet, though the abstraction supports adding them.
+- Optimize Prompt's live mode only supports Anthropic; other providers (OpenAI, Google, a local endpoint) aren't wired up yet, though the abstraction supports adding them. Anthropic is currently the only one of the three that permits direct browser-origin API calls — OpenAI and Gemini both block them via CORS, so adding those needs a local companion process rather than another provider function (see `Prompt Whisperer Features.md` §33).
 - There's no server-side proxy or spend cap — a live API key is used directly and unmetered by the extension; standard Anthropic rate limits apply.
 - Insertion cannot reach cross-origin iframe composers or closed shadow-DOM editors, and never works on internal `chrome://` pages (Chrome blocks script injection there for all extensions).
 - No "undockable" floating window (like Bitwarden's pop-out) yet — deferred as a future enhancement.
